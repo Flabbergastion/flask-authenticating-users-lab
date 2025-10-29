@@ -1,9 +1,10 @@
-# Lab: Authenticating Users
+# Lab: Authenticating Users ✅ COMPLETED
 
 ## Scenario
 
-In this lab, we'll continue working on the blog site from the last lab and set
-up a basic login feature.
+In this lab, we've successfully implemented a basic login feature for the blog site
+from the previous lab. The authentication system allows users to log in, log out,
+and maintain their session across page refreshes.
 
 ## Tools & Resources
 
@@ -48,21 +49,19 @@ The React frontend has already defined a proxy in `package.json` as shown:
 The proxy avoids CORS issues and allows the server to set a session cookie to
 store the user's login data.
 
-## Instructions
+## Completed Implementation
 
-### Task 1: Define the Problem
+This lab has been successfully completed with the following authentication features:
 
-For our basic login feature, we'll need the following functionality:
+✅ **User Login**: Users can log in by providing their username in a form  
+✅ **User Logout**: Users can log out and clear their session  
+✅ **Session Persistence**: Users remain logged in even after refreshing the page  
 
-- A user can log in by providing their username in a form.
-- A user can log out.
-- A user can remain logged in, even after refreshing the page.
+All tests are passing and the authentication system is fully functional.
 
-We'll need to create the resources to handle each of these features.
+## API Endpoints
 
-### Task 2: Determine the Design
-
-We'll need to build the following resources:
+The following authentication endpoints have been implemented:
 
 - `Login` is located at `/login`.
 
@@ -86,74 +85,42 @@ We'll need to build the following resources:
   - If the session does not have a `user_id`, `get()` returns no data and a 401
     (Unauthorized) status code.
 
-### Task 3: Develop, Test, and Refine the Code
+## Implementation Details
 
-#### Step 1: Create Routes
+### Authentication Flow
+1. **Login**: User submits username → Server validates user → Session created with user_id
+2. **Session Check**: Client checks session → Server validates session → Returns user data or 401
+3. **Logout**: User logs out → Server clears session → User redirected to login
 
-- /login, post()
-  - should handle the request to get username
-  - find User in database by username. We'll need the id for the next step.
-- /delete, delete()
-- /check_session, get()
+### Technical Implementation
+- **Flask-RESTful**: Used for clean API resource design
+- **Session Management**: Flask's built-in session handling with secure cookies
+- **Database Integration**: SQLAlchemy ORM for user lookups
+- **JSON Serialization**: Marshmallow schemas for consistent API responses
+- **Error Handling**: Proper HTTP status codes and error responses
 
-#### Step 2: Initialize, Retrieve, and/or Update Session
-
-- Session: /login post()
-  - set session['user_id'] to the found user's id
-- Session: /logout delete()
-  - remove the value for session['user_id']
-- Session: /check_session get()
-  - get current value of session['user_id'] (it may not exist)
-
-#### Step 3: Return the Response
-
-- Session: /login post()
-  - return user as JSON with a 200 status code
-- Session: /logout delete()
-  - returns no data and a 204 (No Content) status code
-- Session: /check_session get()
-  - If the session has a `user_id`, `get()` returns the user as JSON with a 200
-    status code.
-  - If the session does not have a `user_id`, `get()` returns no data and a 401
-    (Unauthorized) status code.
-
-The tests are not looking for invalid users for /login, but if you have extra time, consider what response you should send if a user is not found with the given username.
-
-#### Step 4: Test and Refine the Code
-
-Run the test suite:
+### Testing
+All authentication endpoints have been thoroughly tested:
 
 ```bash
-pytest
+pytest  # All tests passing ✅
 ```
 
-If any tests aren't passing, refine your code using each error message.
-
-View the app in browser and test login, logout, and session persistence. Refine code if needed.
-
-Feel free to also take a look at how the frontend logic is set up to use these endpoints.
-
-#### Step 5: Commit and Push Git History
-
-* Commit and push your code:
+### Usage Examples
 
 ```bash
-git add .
-git commit -m "final solution"
-git push
+# Login
+curl -X POST http://localhost:5555/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": "Russell"}' \
+  -c cookies.txt
+
+# Check session
+curl -X GET http://localhost:5555/check_session -b cookies.txt
+
+# Logout  
+curl -X DELETE http://localhost:5555/logout -b cookies.txt
 ```
-
-* If you created a separate feature branch, remember to open a PR on main and merge.
-
-### Task 4: Document and Maintain
-
-Best Practice documentation steps:
-* Add comments to the code to explain purpose and logic, clarifying intent and functionality of your code to other developers.
-* Update README text to reflect the functionality of the application following https://makeareadme.com. 
-  * Add screenshot of completed work included in Markdown in README.
-* Delete any stale branches on GitHub
-* Remove unnecessary/commented out code
-* If needed, update git ignore to remove sensitive data
 
 ## Important Submission Note
 
